@@ -1,28 +1,39 @@
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import { Post } from "./components/Post";
 
 import styles from "./App.module.css";
-
 import "./global.css";
+
+const socket = io("https://simple-websocket-api-production.up.railway.app");
 
 export function App() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchPosts() {
-      try {
-        const res = await fetch("http://localhost:3001/posts");
-        const data = await res.json();
-        setPosts(data);
-      } catch (error) {
-        console.error("Erro ao buscar posts:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
+    // Conecta e escuta evento de lista inicial
+    socket.on("listaPosts", (data) => {
+      setPosts(data);
+      setLoading(false);
+    });
 
-    fetchPosts();
+    // Escuta novos posts em tempo real
+    socket.on("novoPost", (post) => {
+      setPosts((prevPosts) => [post, ...prevPosts]);
+    });
+
+    // Escuta remoção de post
+    socket.on("postRemovido", (idRemovido) => {
+      setPosts((prevPosts) => prevPosts.filter((p) => p.id !== idRemovido));
+    });
+
+    // Cleanup para evitar múltiplos listeners
+    return () => {
+      socket.off("listaPosts");
+      socket.off("novoPost");
+      socket.off("postRemovido");
+    };
   }, []);
 
   return (
