@@ -6,10 +6,6 @@ export function setupSocketListeners({
   onListaPosts,
   onNovoPost,
   onPostRemovido,
-}: {
-  onListaPosts: (posts) => void;
-  onNovoPost: (post) => void;
-  onPostRemovido: (id) => void;
 }) {
   socket.on("listaPosts", onListaPosts);
   socket.on("novoPost", onNovoPost);
