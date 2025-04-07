@@ -2,12 +2,17 @@ import { format, parseISO, formatDistanceToNow } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import React, { useState } from "react";
 
-import { Avatar } from "./Avatar";
-import { Comment } from "./Comment";
+import { Avatar } from "../Avatar";
+import { Comment } from "../Comment";
 
 import styles from "./Post.module.css";
+import { useNavigate } from "react-router-dom";
+import { usePost } from "../../context/PostContext";
 
 export function Post({ post }) {
+  const navigate = useNavigate();
+  const { setSelectedPost } = usePost();
+
   const [comments, setComments] = useState(["Que interessante!"]);
 
   const [newCommentText, setNewCommentText] = useState("");
@@ -52,6 +57,11 @@ export function Post({ post }) {
 
   const isNewCommentEmpty = newCommentText.length === 0;
 
+  const handleLinkClick = () => {
+    setSelectedPost(post);
+    navigate(`/post/`);
+  };
+
   return (
     <article className={styles.post}>
       <header>
@@ -78,11 +88,12 @@ export function Post({ post }) {
           } else if (line.type === "link") {
             return (
               <p key={line.content}>
-                <a href="#">{line.content}</a>
+                <a onClick={handleLinkClick} style={{ cursor: "pointer" }}>
+                  {line.content}
+                </a>
               </p>
             );
           }
-          return null;
         })}
       </div>
 

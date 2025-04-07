@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./Comment.module.css";
 
 import { ThumbsUp, Trash } from "phosphor-react";
-import { Avatar } from "./Avatar";
+import { Avatar } from "../Avatar";
 
 export function Comment({ content, onDeleteComment }) {
   const [likeCount, setLikeCount] = useState(0);
