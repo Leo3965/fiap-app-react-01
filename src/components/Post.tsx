@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow } from "date-fns";
+import { format, parseISO, formatDistanceToNow } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import React, { useState } from "react";
 
@@ -12,15 +12,17 @@ export function Post({ post }) {
 
   const [newCommentText, setNewCommentText] = useState("");
 
+  const publishedDate = parseISO(post.publishedAt);
+
   const publishedDateFormatted = format(
-    post.publishedAt,
+    publishedDate,
     "d 'de' LLLL 'às' HH:mm'h'",
     {
       locale: ptBR,
     }
   );
 
-  const publishedDateRelativeToNow = formatDistanceToNow(post.publishedAt, {
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedDate, {
     locale: ptBR,
     addSuffix: true,
   });
@@ -63,7 +65,7 @@ export function Post({ post }) {
 
         <time
           title={publishedDateFormatted}
-          dateTime={post.publishedAt.toISOString()}
+          dateTime={publishedDate.toISOString()}
         >
           {publishedDateRelativeToNow}
         </time>
