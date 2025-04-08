@@ -1,11 +1,19 @@
-import styles from "./App.module.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { PostProvider } from "./context/PostContext";
+import { Feed } from "./pages/Feed/";
+import { PostPage } from "./pages/PostPage/";
 
-import "./global.css";
+import "./styles/global.css";
 
 export function App() {
   return (
-    <div>
-      <h1>Hello, FIAP!</h1>
-    </div>
+    <PostProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Feed />} />
+          <Route path="/post/" element={<PostPage />} />
+        </Routes>
+      </BrowserRouter>
+    </PostProvider>
   );
 }
